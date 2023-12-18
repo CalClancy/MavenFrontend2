@@ -83,7 +83,7 @@ const Controller = () => {
                     src={audio.mediaBlobUrl}
                     className="appearance-none"
                     controls
-                    autoPlay // Added autoPlay attribute
+                    autoPlay={audio.sender === config.BOT_NAME.toLowerCase()} // Autoplay only for chatbot's response
                   />
                 </div>
               </div>
