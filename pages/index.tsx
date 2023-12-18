@@ -83,6 +83,7 @@ const Controller = () => {
                     src={audio.mediaBlobUrl}
                     className="appearance-none"
                     controls
+                    autoPlay // Added autoPlay attribute
                   />
                 </div>
               </div>
