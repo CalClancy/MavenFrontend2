@@ -2,6 +2,8 @@
 import { useState } from "react";
 import Title from "@/components/Title";
 import {RecordMessage} from "@/components/RecordMessage";
+import config from '../config'; // Adjust the path as necessary
+
 import Link from 'next/link'
 
 const Controller = () => {
@@ -52,7 +54,8 @@ const Controller = () => {
       ChatbotAudio.play()
   
       // Create a new message for the chatbot response
-      const chatbotMessage = { sender: "rachel", mediaBlobUrl: chatbotBlobURL };
+     // const chatbotMessage = { sender: "rachel", mediaBlobUrl: chatbotBlobURL };
+      const chatbotMessage = { sender: config.BOT_NAME.toLowerCase(), mediaBlobUrl: chatbotBlobURL };
       const updatedMessagesArr = [...messagesArr, chatbotMessage];
   
       setMessages(updatedMessagesArr);
@@ -79,16 +82,18 @@ const Controller = () => {
             return (
               <div
                 key={index}
-                className={
-                  "flex flex-col " +
-                  (audio.sender == "rachel" && "flex items-end")
+                className={`flex flex-col ${audio.sender == config.BOT_NAME.toLowerCase() ? "items-end" : ""}`}
+
+//                className={
+  //                "flex flex-col " +
+    //              (audio.sender == config.BOT_NAME.toLowerCase() && "flex items-end")
                 }
               >
                 {/* Sender */}
                 <div className="mt-4 ">
                   <p
                     className={
-                      audio.sender == "rachel"
+                      audio.sender == config.BOT_NAME.toLowerCase()
                         ? "text-right mr-2 italic text-green-500"
                         : "ml-2 italic text-blue-500"
                     }
