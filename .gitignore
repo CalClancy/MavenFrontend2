@@ -1,0 +1,46 @@
+# Dependency directories
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and Editor folders
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# TypeScript compiled files
+*.js
+*.jsx
+*.js.map
+*.jsx.map
+*.d.ts
+# Except for specific JS files in the root (adjust as necessary)
+!/*.js
+
+# Coverage directory used by tools like Istanbul
+coverage/
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Debug log from npm
+npm-debug.log*
+
+# Logs
+logs
+*.log
