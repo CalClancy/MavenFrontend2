@@ -54,7 +54,6 @@ const Controller = () => {
       ChatbotAudio.play()
   
       // Create a new message for the chatbot response
-     // const chatbotMessage = { sender: "rachel", mediaBlobUrl: chatbotBlobURL };
       const chatbotMessage = { sender: config.BOT_NAME.toLowerCase(), mediaBlobUrl: chatbotBlobURL };
       const updatedMessagesArr = [...messagesArr, chatbotMessage];
   
@@ -65,9 +64,6 @@ const Controller = () => {
       setIsLoading(false);
     };
   };
-  
-  
-  
   
 
   return (
@@ -115,7 +111,7 @@ const Controller = () => {
 
           {messages.length == 0 && !isLoading && (
             <div className="text-center font-light italic mt-10">
-              Send Rachel a message...
+              Send {config.BOT_NAME.toLowerCase()} a message...
             </div>
           )}
 
