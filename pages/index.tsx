@@ -1,26 +1,55 @@
 import { useState } from "react";
 import Title from "@/components/Title";
 import { RecordMessage } from "@/components/RecordMessage";
-import config from '../config'; // Make sure this path is correct
+import config from '../config'; // Adjust the path as necessary
 import Link from 'next/link';
 
 const Controller = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<any[]>([]);
 
-  // Rest of your code...
-
   const handleStop = async (mediaBlobUrl: any) => {
-    // Existing code...
+    setIsLoading(true);
+    console.log(mediaBlobUrl);
+  
+    // Append recorded message to messages
+    const myMessage = { sender: "me", mediaBlobUrl };
+    const messagesArr = [...messages, myMessage];
+  
+    try {
+      // Fetch the content from the URL and convert it to a Blob
+      const response = await fetch(mediaBlobUrl);
+      const blob = await response.blob();
+  
+      // Send blob to the server 
+      const formData = new FormData();
+      formData.append("file", blob, "myFile.wav");
+  
+      const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+      const blobResponse = await fetch(`${BASE_URL}/post-audio`, {
+        method: 'POST',
+        mode: 'cors',
+        body: formData,
+      });
+  
+      const chatbotData = await blobResponse.blob();
+      
+      if (!blobResponse.ok) {
+        throw new Error("Unable to get Blob response");
+      }
+      
+      const chatbotBlob = new Blob([chatbotData], {type: 'audio/wav'});
+      const chatbotBlobURL = URL.createObjectURL(chatbotBlob); // Correctly define chatbotBlobURL here
 
-    // Create a new message for the chatbot response
-    const chatbotMessage = { sender: config.BOT_NAME.toLowerCase(), mediaBlobUrl: chatbotBlobURL };
-    const updatedMessagesArr = [...messagesArr, chatbotMessage];
-
-    setMessages(updatedMessagesArr);
-    setIsLoading(false);
-
-    // Catch block...
+      const chatbotMessage = { sender: config.BOT_NAME.toLowerCase(), mediaBlobUrl: chatbotBlobURL };
+      const updatedMessagesArr = [...messagesArr, chatbotMessage];
+  
+      setMessages(updatedMessagesArr);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    };
   };
 
   return (
