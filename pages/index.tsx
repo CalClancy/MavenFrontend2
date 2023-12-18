@@ -4,47 +4,50 @@ import { RecordMessage } from "@/components/RecordMessage";
 import Link from 'next/link';
 import config from '../config'; // Adjust the path as necessary
 
-const Controller = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState<any[]>([]);
+const handleStop = async (mediaBlobUrl: any) => {
+  setIsLoading(true);
+  console.log(mediaBlobUrl);
 
-  const handleStop = async (mediaBlobUrl: any) => {
-    setIsLoading(true);
-    console.log(mediaBlobUrl);
-  
-    const myMessage = { sender: "me", mediaBlobUrl };
-    const messagesArr = [...messages, myMessage];
-  
-    try {
-      const response = await fetch(mediaBlobUrl);
-      const blob = await response.blob();
-  
-      const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-      const blobResponse = await fetch(`${BASE_URL}/post-audio`, {
-        method: 'POST',
-        mode: 'cors',
-        body: formData,
-      });
-  
-      const chatbotData = await blobResponse.blob();
-      
-      if(!blobResponse.ok) { throw new Error("Unable to get Blob response") }
-      console.log(chatbotData);
-      const chatbotBlob = new Blob([chatbotData], {type: 'audio/wav'})
-      const chatbotBlobURL = URL.createObjectURL(chatbotBlob)
-      const ChatbotAudio = new Audio(chatbotBlobURL)
-      ChatbotAudio.play()
-  
-      const chatbotMessage = { sender: config.BOT_NAME.toLowerCase(), mediaBlobUrl: chatbotBlobURL };
-      const updatedMessagesArr = [...messagesArr, chatbotMessage];
-  
-      setMessages(updatedMessagesArr);
-      setIsLoading(false);
-    } catch (error) {
-      console.error(error);
-      setIsLoading(false);
-    };
+  const myMessage = { sender: "me", mediaBlobUrl };
+  const messagesArr = [...messages, myMessage];
+
+  try {
+    const response = await fetch(mediaBlobUrl);
+    const blob = await response.blob();
+
+    // Initialize formData
+    const formData = new FormData();
+    formData.append("file", blob, "myFile.wav");
+
+    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+    const blobResponse = await fetch(`${BASE_URL}/post-audio`, {
+      method: 'POST',
+      mode: 'cors',
+      body: formData,
+    });
+
+    const chatbotData = await blobResponse.blob();
+    
+    if (!blobResponse.ok) { 
+      throw new Error("Unable to get Blob response");
+    }
+    console.log(chatbotData);
+    const chatbotBlob = new Blob([chatbotData], {type: 'audio/wav'})
+    const chatbotBlobURL = URL.createObjectURL(chatbotBlob)
+    const ChatbotAudio = new Audio(chatbotBlobURL)
+    ChatbotAudio.play()
+
+    const chatbotMessage = { sender: config.BOT_NAME.toLowerCase(), mediaBlobUrl: chatbotBlobURL };
+    const updatedMessagesArr = [...messagesArr, chatbotMessage];
+
+    setMessages(updatedMessagesArr);
+    setIsLoading(false);
+  } catch (error) {
+    console.error(error);
+    setIsLoading(false);
   };
+};
+
   
   return (
     <div className="h-screen overflow-y-hidden">
