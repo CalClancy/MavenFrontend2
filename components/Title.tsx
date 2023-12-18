@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import config from "../config"; // Adjust the path as necessary
 
 type Props = {
   setMessages: any;
@@ -32,7 +33,7 @@ function Title({ setMessages }: Props) {
 
   return (
     <div className="flex justify-between items-center w-full p-4 bg-gray-900 text-white font-bold shadow">
-      <div className="italic">Rachel</div>
+      <div className="italic">{config.BOT_NAME}</div>
       <button
         onClick={resetConversation}
         className={
